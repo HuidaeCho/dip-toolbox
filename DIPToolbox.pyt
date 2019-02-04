@@ -54,6 +54,7 @@ class Toolbox(object):
             BitwiseAnd,
             BitwiseOr,
             BitwiseXor,
+            Add,
             Subtract,
             AddNoise,
             Average,
@@ -941,6 +942,61 @@ class BitwiseXor(object):
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_xor(img1_a, img2_a)
         save_add_raster_array(output_tiff, new_img_a, img1)
+        return
+
+class Add(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Add"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layers = arcpy.Parameter(
+            name='raster_layers',
+            displayName='Raster Layers',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+            multiValue=True,
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layers, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layers = parameters[0].valueAsText
+        output_tiff = parameters[1].value
+
+        imgs_a = []
+        for raster_layer in raster_layers.split(';'):
+            img, img_a = get_raster_array(raster_layer)
+            imgs_a.append(img_a)
+        new_img_a = dippy.add(imgs_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class Subtract(object):
