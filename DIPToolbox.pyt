@@ -21,16 +21,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #############################################################################
 
-# path to custom modules
-# copy agpy.py and dippy.py to this folder
-modules_path = 'T:\\'
-
 import arcpy
 import os
 import time
-
-import sys
-sys.path.append(modules_path)
 
 # https://github.com/HuidaeCho/agpy
 import agpy
