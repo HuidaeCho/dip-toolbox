@@ -880,7 +880,7 @@ class BitwiseOr(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_or(img1_a, img2_a)
-        save_add_raster_array(output_tiff, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img1)
         return
 
 class BitwiseXor(object):
@@ -940,7 +940,7 @@ class BitwiseXor(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_xor(img1_a, img2_a)
-        save_add_raster_array(output_tiff, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img1)
         return
 
 class Subtract(object):
@@ -1000,7 +1000,7 @@ class Subtract(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.subtract(img1_a, img2_a)
-        save_add_raster_array(output_tiff, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img1)
         return
 
 class AddNoise(object):
