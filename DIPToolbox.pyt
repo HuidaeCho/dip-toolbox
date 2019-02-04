@@ -24,8 +24,6 @@
 # path to custom modules
 # copy agpy.py and dippy.py to this folder
 modules_path = 'T:\\'
-# path to output files
-output_path = 'T:\\'
 
 import arcpy
 import os
