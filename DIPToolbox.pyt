@@ -49,6 +49,7 @@ class Toolbox(object):
 
         # List of tool classes associated with this toolbox
         self.tools = [
+            ConvertMapToGrayscale,
             GrayscaleTransform,
             NegativeTransform,
             LinearTransform,
@@ -91,47 +92,54 @@ class Tool(object):
         """The source code of the tool."""
         return
 
-def get_map(suffix):
-    tif_path = output_path + 'dip-map-' + suffix + '.tif'
-    if os.path.exists(tif_path):
-        os.remove(tif_path)
-    agpy.export_map_to_tiff(tif_path, 1024, 1024)
-    img = arcpy.Raster(tif_path)
+def export_map(tiff_path):
+    if os.path.exists(tiff_path):
+        os.remove(tiff_path)
+    agpy.export_map_to_tiff(tiff_path, 1024, 1024)
 
-    tif_path = output_path + 'dip-old-' + suffix + '.tif'
-    if os.path.exists(tif_path):
-        os.remove(tif_path)
+def add_tiff_to_map(tiff_path):
+    arcpy.mp.ArcGISProject('CURRENT').activeMap.addDataFromPath(tiff_path)
+
+def convert_tiff_to_grayscale(tiff_path, gray_tiff_path):
+    img = arcpy.Raster(tiff_path)
+    if os.path.exists(gray_tiff_path):
+        os.remove(gray_tiff_path)
     img_a = agpy.convert_raster_to_grayscale_array(img)
     img = agpy.convert_array_to_raster(img_a, img)
-    arcpy.CopyRaster_management(img, tif_path)
-    arcpy.mp.ArcGISProject('CURRENT').activeMap.addDataFromPath(tif_path)
+    arcpy.CopyRaster_management(img, gray_tiff_path)
+
+def save_raster_array(tiff_path, img_a, ref_img):
+    if os.path.exists(tiff_path):
+        os.remove(tiff_path)
+    img = agpy.convert_array_to_raster(img_a, ref_img)
+    arcpy.CopyRaster_management(img, tiff_path)
+
+def get_raster_array(raster_layer):
+    img = arcpy.Raster(raster_layer)
+    img_a = arcpy.RasterToNumPyArray(img)
     return img, img_a
 
-def save_map_array(suffix, img_a, ref_img):
-    tif_path = output_path + 'dip-new-' + suffix +'.tif'
-    if os.path.exists(tif_path):
-        os.remove(tif_path)
-    img = agpy.convert_array_to_raster(img_a, ref_img)
-    arcpy.CopyRaster_management(img, tif_path)
-    arcpy.mp.ArcGISProject('CURRENT').activeMap.addDataFromPath(tif_path)
+def save_add_raster_array(tiff_path, img_a, ref_img):
+    save_raster_array(tiff_path, img_a, ref_img)
+    add_tiff_to_map(tiff_path)
 
-class GrayscaleTransform(object):
+class ConvertMapToGrayscale(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Grayscale transform"
+        self.label = "Convert the map to grayscale"
         self.description = self.label
         self.canRunInBackground = False
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        new_L = arcpy.Parameter(
-            name='new_L',
-            displayName='New L',
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
             direction='Input',
-            datatype='GPLong',
+            datatype='GPString',
             parameterType='Required',
         )
-        params = [new_L]
+        params = [output_tiff]
         return params
 
     def isLicensed(self):
@@ -151,14 +159,71 @@ class GrayscaleTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        new_L = parameters[0].value
+        output_tiff = parameters[0].value
 
-        suffix = 'grayscale-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
+        map_tiff = output_tiff.replace('.', '-color.')
+        export_map(map_tiff)
+        convert_tiff_to_grayscale(map_tiff, output_tiff)
+        add_tiff_to_map(output_tiff)
+        return
 
-        new_img_a = dippy.grayscale_transform(img_a, new_L)
+class GrayscaleTransform(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Grayscale transform"
+        self.description = self.label
+        self.canRunInBackground = False
 
-        save_map_array(suffix, new_img_a, img)
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        gray_levels = arcpy.Parameter(
+            name='gray_levels',
+            displayName='Gray Levels',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, gray_levels, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        gray_levels = parameters[1].value
+        output_tiff = parameters[2].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.grayscale_transform(img_a, gray_levels)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class NegativeTransform(object):
@@ -170,7 +235,21 @@ class NegativeTransform(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        params = None
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
         return params
 
     def isLicensed(self):
@@ -190,12 +269,12 @@ class NegativeTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        suffix = 'negative-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
 
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.negative_transform(img_a)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class LinearTransform(object):
@@ -207,6 +286,13 @@ class LinearTransform(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
         cp1r = arcpy.Parameter(
             name='cp1r',
             displayName='Control point 1 r',
@@ -228,14 +314,21 @@ class LinearTransform(object):
             datatype='GPLong',
             parameterType='Required',
         )
-        cp1s = arcpy.Parameter(
+        cp2s = arcpy.Parameter(
             name='cp2s',
             displayName='Control point 2 s',
             direction='Input',
             datatype='GPLong',
             parameterType='Required',
         )
-        params = [cp1r, cp1s, cp2r, cp2s]
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, cp1r, cp1s, cp2r, cp2s, output_tiff]
         return params
 
     def isLicensed(self):
@@ -255,17 +348,16 @@ class LinearTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        cp1r = parameters[0].value
-        cp1s = parameters[1].value
-        cp2r = parameters[2].value
-        cp2s = parameters[3].value
+        raster_layer = parameters[0].valueAsText
+        cp1r = parameters[1].value
+        cp1s = parameters[2].value
+        cp2r = parameters[3].value
+        cp2s = parameters[4].value
+        output_tiff = parameters[5].value
 
-        suffix = 'linear-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
-
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.linear_transform(img_a, (cp1r, cp1s), (cp2r, cp2s))
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class LogTransform(object):
@@ -277,7 +369,21 @@ class LogTransform(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        params = None
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
         return params
 
     def isLicensed(self):
@@ -297,12 +403,12 @@ class LogTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        suffix = 'log-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
 
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.log_transform(img_a)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class InverseLogTransform(object):
@@ -314,7 +420,21 @@ class InverseLogTransform(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        params = None
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
         return params
 
     def isLicensed(self):
@@ -334,12 +454,12 @@ class InverseLogTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        suffix = 'inverselog-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
 
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.inverse_log_transform(img_a)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class PowerTransform(object):
@@ -351,6 +471,13 @@ class PowerTransform(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
         gamma = arcpy.Parameter(
             name='gamma',
             displayName='gamma',
@@ -358,7 +485,14 @@ class PowerTransform(object):
             datatype='GPDouble',
             parameterType='Required',
         )
-        params = [gamma]
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, gamma, output_tiff]
         return params
 
     def isLicensed(self):
@@ -378,14 +512,13 @@ class PowerTransform(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        gamma = parameters[0].value
+        raster_layer = parameters[0].valueAsText
+        gamma = parameters[1].value
+        output_tiff = parameters[2].value
 
-        suffix = 'power-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
-
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.power_transform(img_a, gamma)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class GrayLevelSlice(object):
@@ -397,6 +530,13 @@ class GrayLevelSlice(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
         lower_gray = arcpy.Parameter(
             name='lower_gray',
             displayName='Lower gray level',
@@ -423,9 +563,16 @@ class GrayLevelSlice(object):
             displayName='Binary',
             direction='Input',
             datatype='GPBoolean',
+            parameterType='Optional',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
             parameterType='Required',
         )
-        params = [lower_gray, upper_gray, new_gray, binary]
+        params = [raster_layer, lower_gray, upper_gray, new_gray, binary, output_tiff]
         return params
 
     def isLicensed(self):
@@ -445,17 +592,16 @@ class GrayLevelSlice(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        lower_gray = parameters[0].value
-        upper_gray = parameters[1].value
-        new_gray = parameters[2].value
-        binary = parameters[3].value
+        raster_layer = parameters[0].valueAsText
+        lower_gray = parameters[1].value
+        upper_gray = parameters[2].value
+        new_gray = parameters[3].value
+        binary = parameters[4].value
+        output_tiff = parameters[5].value
 
-        suffix = 'slice-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
-
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.gray_level_slice(img_a, (lower_gray, upper_gray), new_gray, binary)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class BitPlaneSlice(object):
@@ -467,6 +613,13 @@ class BitPlaneSlice(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
         bit_plane = arcpy.Parameter(
             name='bit_plane',
             displayName='Bit plane',
@@ -474,7 +627,14 @@ class BitPlaneSlice(object):
             datatype='GPLong',
             parameterType='Required',
         )
-        params = [bit_plane]
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, bit_plane, output_tiff]
         return params
 
     def isLicensed(self):
@@ -494,14 +654,13 @@ class BitPlaneSlice(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        bit_plane = parameters[0].value
+        raster_layer = parameters[0].valueAsText
+        bit_plane = parameters[1].value
+        output_tiff = parameters[2].value
 
-        suffix = 'bitplane-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
-
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.bit_plane_slice(img_a, bit_plane)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class HistogramEqualize(object):
@@ -513,7 +672,21 @@ class HistogramEqualize(object):
 
     def getParameterInfo(self):
         """Define parameter definitions"""
-        params = None
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
         return params
 
     def isLicensed(self):
@@ -533,10 +706,10 @@ class HistogramEqualize(object):
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        suffix = 'histogram-' + str(int(time.time()))
-        img, img_a = get_map(suffix)
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
 
+        img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.histogram_equalize(img_a)
-
-        save_map_array(suffix, new_img_a, img)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
