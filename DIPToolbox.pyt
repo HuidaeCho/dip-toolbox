@@ -59,6 +59,13 @@ class Toolbox(object):
             GrayLevelSlice,
             BitPlaneSlice,
             HistogramEqualize,
+            BitwiseNot,
+            BitwiseAnd,
+            BitwiseOr,
+            BitwiseXor,
+            Subtract,
+            AddNoise,
+            Average,
         ]
 
 class Tool(object):
@@ -711,5 +718,418 @@ class HistogramEqualize(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.histogram_equalize(img_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class BitwiseNot(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Bitwise not"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.bitwise_not(img_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class BitwiseAnd(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Bitwise and"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer_1 = arcpy.Parameter(
+            name='raster_layer_1',
+            displayName='Raster Layer 1',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        raster_layer_2 = arcpy.Parameter(
+            name='raster_layer_2',
+            displayName='Raster Layer 2',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer_1, raster_layer_2, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer_1 = parameters[0].valueAsText
+        raster_layer_2 = parameters[1].valueAsText
+        output_tiff = parameters[2].value
+
+        img1, img1_a = get_raster_array(raster_layer_1)
+        img2, img2_a = get_raster_array(raster_layer_2)
+        new_img_a = dippy.bitwise_and(img1_a, img2_a)
+        save_add_raster_array(output_tiff, new_img_a, img1)
+        return
+
+class BitwiseOr(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Bitwise or"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer_1 = arcpy.Parameter(
+            name='raster_layer_1',
+            displayName='Raster Layer 1',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        raster_layer_2 = arcpy.Parameter(
+            name='raster_layer_2',
+            displayName='Raster Layer 2',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer_1, raster_layer_2, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer_1 = parameters[0].valueAsText
+        raster_layer_2 = parameters[1].valueAsText
+        output_tiff = parameters[2].value
+
+        img1, img1_a = get_raster_array(raster_layer_1)
+        img2, img2_a = get_raster_array(raster_layer_2)
+        new_img_a = dippy.bitwise_or(img1_a, img2_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class BitwiseXor(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Bitwise xor"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer_1 = arcpy.Parameter(
+            name='raster_layer_1',
+            displayName='Raster Layer 1',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        raster_layer_2 = arcpy.Parameter(
+            name='raster_layer_2',
+            displayName='Raster Layer 2',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer_1, raster_layer_2, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer_1 = parameters[0].valueAsText
+        raster_layer_2 = parameters[1].valueAsText
+        output_tiff = parameters[2].value
+
+        img1, img1_a = get_raster_array(raster_layer_1)
+        img2, img2_a = get_raster_array(raster_layer_2)
+        new_img_a = dippy.bitwise_xor(img1_a, img2_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class Subtract(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Subtract"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer_1 = arcpy.Parameter(
+            name='raster_layer_1',
+            displayName='Raster Layer 1',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        raster_layer_2 = arcpy.Parameter(
+            name='raster_layer_2',
+            displayName='Raster Layer 2',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer_1, raster_layer_2, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer_1 = parameters[0].valueAsText
+        raster_layer_2 = parameters[1].valueAsText
+        output_tiff = parameters[2].value
+
+        img1, img1_a = get_raster_array(raster_layer_1)
+        img2, img2_a = get_raster_array(raster_layer_2)
+        new_img_a = dippy.subtract(img1_a, img2_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class AddNoise(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Add noise"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        prob = arcpy.Parameter(
+            name='prob',
+            displayName='Probability of noise',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        max = arcpy.Parameter(
+            name='max',
+            displayName='Max noise',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, prob, max, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        prob = parameters[1].value
+        max = parameters[2].value
+        output_tiff = parameters[3].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.add_noise(img_a, prob, max)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class Average(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Average"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layers = arcpy.Parameter(
+            name='raster_layers',
+            displayName='Raster Layers',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+            multiValue=True,
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layers, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layers = parameters[0].valueAsText
+        output_tiff = parameters[1].value
+
+        imgs_a = []
+        for raster_layer in raster_layers.split(';'):
+            img, img_a = get_raster_array(raster_layer)
+            imgs_a.append(img_a)
+        new_img_a = dippy.average(imgs_a)
         save_add_raster_array(output_tiff, new_img_a, img)
         return
