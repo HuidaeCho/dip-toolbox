@@ -50,6 +50,7 @@ class Toolbox(object):
             GrayLevelSlice,
             BitPlaneSlice,
             HistogramEqualize,
+            Histogram,
             BitwiseNot,
             BitwiseAnd,
             BitwiseOr,
@@ -660,6 +661,48 @@ class BitPlaneSlice(object):
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.bit_plane_slice(img_a, bit_plane)
         save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class Histogram(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Histogram"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        params = [raster_layer]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+
+        img, img_a = get_raster_array(raster_layer)
+        dippy.histogram(img_a)
         return
 
 class HistogramEqualize(object):
