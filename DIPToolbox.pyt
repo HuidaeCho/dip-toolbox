@@ -1261,16 +1261,37 @@ class LocalStatistics(object):
             displayName='Output Local Mean TIFF',
             direction='Input',
             datatype='GPString',
-            parameterType='Required',
+            parameterType='Optional',
         )
         local_std_tiff = arcpy.Parameter(
             name='local_std_tiff',
             displayName='Output Local Standard Deviation TIFF',
             direction='Input',
             datatype='GPString',
-            parameterType='Required',
+            parameterType='Optional',
         )
-        params = [raster_layer, width, height, local_mean_tiff, local_std_tiff]
+        local_median_tiff = arcpy.Parameter(
+            name='local_median_tiff',
+            displayName='Output Local Median TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Optional',
+        )
+        local_min_tiff = arcpy.Parameter(
+            name='local_min_tiff',
+            displayName='Output Local Minimum TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Optional',
+        )
+        local_max_tiff = arcpy.Parameter(
+            name='local_max_tiff',
+            displayName='Output Local Maximum TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Optional',
+        )
+        params = [raster_layer, width, height, local_mean_tiff, local_std_tiff, local_median_tiff, local_min_tiff, local_max_tiff]
         return params
 
     def isLicensed(self):
@@ -1295,11 +1316,35 @@ class LocalStatistics(object):
         height = parameters[2].value
         local_mean_tiff = parameters[3].value
         local_std_tiff = parameters[4].value
+        local_median_tiff = parameters[5].value
+        local_min_tiff = parameters[6].value
+        local_max_tiff = parameters[7].value
 
-        img, img_a = get_raster_array(raster_layer)
-        local_mean_img_a, local_std_img_a = dippy.local_statistics(img_a, (height, width))
-        save_add_raster_array(local_mean_tiff, local_mean_img_a, img)
-        save_add_raster_array(local_std_tiff, local_std_img_a, img)
+        stats = 0
+        if local_mean_tiff:
+            stats |= 1
+        if local_std_tiff:
+            stats |= 2
+        if local_median_tiff:
+            stats |= 4
+        if local_min_tiff:
+            stats |= 8
+        if local_max_tiff:
+            stats |= 16
+
+        if stats:
+            img, img_a = get_raster_array(raster_layer)
+            local_a = dippy.local_statistics(img_a, (height, width), stats)
+            if local_mean_tiff:
+                save_add_raster_array(local_mean_tiff, local_a[0], img)
+            if local_std_tiff:
+                save_add_raster_array(local_std_tiff, local_a[1], img)
+            if local_median_tiff:
+                save_add_raster_array(local_median_tiff, local_a[2], img)
+            if local_min_tiff:
+                save_add_raster_array(local_min_tiff, local_a[3], img)
+            if local_max_tiff:
+                save_add_raster_array(local_max_tiff, local_a[4], img)
         return
 
 class LocalEnhance(object):
