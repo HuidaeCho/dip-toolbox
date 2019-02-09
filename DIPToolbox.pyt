@@ -59,6 +59,8 @@ class Toolbox(object):
             Subtract,
             AddNoise,
             Average,
+            LocalStatistics,
+            LocalEnhance,
         ]
 
 class Tool(object):
@@ -1120,14 +1122,14 @@ class AddNoise(object):
         )
         prob = arcpy.Parameter(
             name='prob',
-            displayName='Probability of noise',
+            displayName='Probability of Noise',
             direction='Input',
             datatype='GPDouble',
             parameterType='Required',
         )
         max = arcpy.Parameter(
             name='max',
-            displayName='Max noise',
+            displayName='Max Noise',
             direction='Input',
             datatype='GPLong',
             parameterType='Required',
@@ -1221,5 +1223,182 @@ class Average(object):
             img, img_a = get_raster_array(raster_layer)
             imgs_a.append(img_a)
         new_img_a = dippy.average(imgs_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class LocalStatistics(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Local statistics"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        width = arcpy.Parameter(
+            name='width',
+            displayName='Neighborhood Width',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        height = arcpy.Parameter(
+            name='height',
+            displayName='Neighborhood Height',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        local_mean_tiff = arcpy.Parameter(
+            name='local_mean_tiff',
+            displayName='Output Local Mean TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        local_std_tiff = arcpy.Parameter(
+            name='local_std_tiff',
+            displayName='Output Local Standard Deviation TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, width, height, local_mean_tiff, local_std_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        width = parameters[1].value
+        height = parameters[2].value
+        local_mean_tiff = parameters[3].value
+        local_std_tiff = parameters[4].value
+
+        img, img_a = get_raster_array(raster_layer)
+        local_mean_img_a, local_std_img_a = dippy.local_statistics(img_a, (height, width))
+        save_add_raster_array(local_mean_tiff, local_mean_img_a, img)
+        save_add_raster_array(local_std_tiff, local_std_img_a, img)
+        return
+
+class LocalEnhance(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Local enhance"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        local_mean_layer = arcpy.Parameter(
+            name='local_mean_layer',
+            displayName='Local Mean Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        local_std_layer = arcpy.Parameter(
+            name='local_std_layer',
+            displayName='Local Standard Deviation Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        multi = arcpy.Parameter(
+            name='multi',
+            displayName='Gray Level Multipler',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        k0 = arcpy.Parameter(
+            name='k0',
+            displayName='Mean Parameter',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        k1 = arcpy.Parameter(
+            name='k1',
+            displayName='Lower Standard Deviation Parameter',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        k2 = arcpy.Parameter(
+            name='k2',
+            displayName='Upper Standard Deviation Parameter',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, local_mean_layer, local_std_layer, multi, k0, k1, k2, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        local_mean_layer = parameters[1].valueAsText
+        local_std_layer = parameters[2].valueAsText
+        multi = parameters[3].value
+        k0 = parameters[4].value
+        k1 = parameters[5].value
+        k2 = parameters[6].value
+        output_tiff = parameters[7].value
+
+        img, img_a = get_raster_array(raster_layer)
+        local_mean_a = get_raster_array(local_mean_layer)[1]
+        local_std_a = get_raster_array(local_std_layer)[1]
+        new_img_a = dippy.local_enhance(img_a, local_mean_a, local_std_a, multi, (k0, k1, k2))
         save_add_raster_array(output_tiff, new_img_a, img)
         return
