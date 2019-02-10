@@ -24,6 +24,7 @@
 import arcpy
 import os
 import time
+import numpy as np
 
 # https://github.com/HuidaeCho/agpy
 import agpy
@@ -61,6 +62,7 @@ class Toolbox(object):
             Average,
             LocalStatistics,
             LocalEnhance,
+            WeightedAverage,
         ]
 
 class Tool(object):
@@ -1445,5 +1447,81 @@ class LocalEnhance(object):
         local_mean_a = get_raster_array(local_mean_layer)[1]
         local_std_a = get_raster_array(local_std_layer)[1]
         new_img_a = dippy.local_enhance(img_a, local_mean_a, local_std_a, multi, (k0, k1, k2))
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class WeightedAverage(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Weighted average"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        width = arcpy.Parameter(
+            name='width',
+            displayName='Neighborhood Width',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        height = arcpy.Parameter(
+            name='height',
+            displayName='Neighborhood Height',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        weights = arcpy.Parameter(
+            name='weights',
+            displayName='Filter weights separated by a space',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, width, height, weights, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        width = parameters[1].value
+        height = parameters[2].value
+        weights = parameters[3].value
+        output_tiff = parameters[4].value
+
+        img, img_a = get_raster_array(raster_layer)
+        weights = np.fromstring(weights, sep=' ').reshape(height, width)
+        new_img_a = dippy.weighted_average(img_a, weights)
         save_add_raster_array(output_tiff, new_img_a, img)
         return
