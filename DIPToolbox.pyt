@@ -62,7 +62,12 @@ class Toolbox(object):
             Average,
             LocalStatistics,
             LocalEnhance,
+            Convolute,
             WeightedAverage,
+            FirstDerivative,
+            SecondDerivative,
+            Sharpen,
+            HighBoostFilter,
         ]
 
 class Tool(object):
@@ -1450,6 +1455,90 @@ class LocalEnhance(object):
         save_add_raster_array(output_tiff, new_img_a, img)
         return
 
+class Convolute(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Convolute"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        width = arcpy.Parameter(
+            name='width',
+            displayName='Neighborhood Width',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        height = arcpy.Parameter(
+            name='height',
+            displayName='Neighborhood Height',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
+        mask = arcpy.Parameter(
+            name='mask',
+            displayName='Filter mask values separated by a space',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        average = arcpy.Parameter(
+            name='average',
+            displayName='Weighted Average',
+            direction='Input',
+            datatype='GPBoolean',
+            parameterType='Optional',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, width, height, mask, average, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        width = parameters[1].value
+        height = parameters[2].value
+        mask = parameters[3].value
+        average = parameters[4].value
+        output_tiff = parameters[5].value
+
+        img, img_a = get_raster_array(raster_layer)
+        mask = np.fromstring(mask, sep=' ').reshape(height, width)
+        new_img_a = dippy.convolute(img_a, mask, average)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
 class WeightedAverage(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
@@ -1482,7 +1571,7 @@ class WeightedAverage(object):
         )
         weights = arcpy.Parameter(
             name='weights',
-            displayName='Filter weights separated by a space',
+            displayName='Weights separated by a space',
             direction='Input',
             datatype='GPString',
             parameterType='Required',
@@ -1523,5 +1612,241 @@ class WeightedAverage(object):
         img, img_a = get_raster_array(raster_layer)
         weights = np.fromstring(weights, sep=' ').reshape(height, width)
         new_img_a = dippy.weighted_average(img_a, weights)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class FirstDerivative(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "First derivative using the Sobel operators"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        output_tiff = parameters[1].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.first_derivative(img_a)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class SecondDerivative(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Second derivative using the Laplacian filter"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        diag = arcpy.Parameter(
+            name='diag',
+            displayName='Consider Diagonal Directions',
+            direction='Input',
+            datatype='GPBoolean',
+            parameterType='Optional',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, diag, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        diag = parameters[1].value
+        output_tiff = parameters[2].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.second_derivative(img_a, diag)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class Sharpen(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Sharpen using the Laplacian"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        diag = arcpy.Parameter(
+            name='diag',
+            displayName='Consider Diagonal Directions',
+            direction='Input',
+            datatype='GPBoolean',
+            parameterType='Optional',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, diag, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        diag = parameters[1].value
+        output_tiff = parameters[2].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.sharpen(img_a, diag)
+        save_add_raster_array(output_tiff, new_img_a, img)
+        return
+
+class HighBoostFilter(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "High-boost filter using the Laplacian"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        A = arcpy.Parameter(
+            name='A',
+            displayName='High-boost filter parameter',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        diag = arcpy.Parameter(
+            name='diag',
+            displayName='Consider Diagonal Directions',
+            direction='Input',
+            datatype='GPBoolean',
+            parameterType='Optional',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, A, diag, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        A = parameters[1].value
+        diag = parameters[2].value
+        output_tiff = parameters[3].value
+
+        img, img_a = get_raster_array(raster_layer)
+        new_img_a = dippy.high_boost_filter(img_a, A, diag)
         save_add_raster_array(output_tiff, new_img_a, img)
         return
