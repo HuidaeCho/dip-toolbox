@@ -1386,7 +1386,7 @@ class LocalEnhance(object):
         )
         multi = arcpy.Parameter(
             name='multi',
-            displayName='Gray Level Multipler',
+            displayName='Gray-level Multipler',
             direction='Input',
             datatype='GPDouble',
             parameterType='Required',
