@@ -42,6 +42,7 @@ class Toolbox(object):
         # List of tool classes associated with this toolbox
         self.tools = [
             ConvertMapToGrayscale,
+            RescaleGrayLevels,
             GrayscaleTransform,
             NegativeTransform,
             LinearTransform,
@@ -174,6 +175,74 @@ class ConvertMapToGrayscale(object):
         export_map(map_tiff)
         convert_tiff_to_grayscale(map_tiff, output_tiff)
         add_tiff_to_map(output_tiff)
+        return
+
+class RescaleGrayLevels(object):
+    def __init__(self):
+        """Define the tool (tool name is the name of the class)."""
+        self.label = "Rescale gray levels"
+        self.description = self.label
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        """Define parameter definitions"""
+        raster_layer = arcpy.Parameter(
+            name='raster_layer',
+            displayName='Raster Layer',
+            direction='Input',
+            datatype='GPRasterLayer',
+            parameterType='Required',
+        )
+        lower_gray_level = arcpy.Parameter(
+            name='lower_gray_level',
+            displayName='Lower Gray Level',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        upper_gray_level = arcpy.Parameter(
+            name='upper_gray_level',
+            displayName='Upper Gray Level',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
+        output_tiff = arcpy.Parameter(
+            name='output_tiff',
+            displayName='Output TIFF',
+            direction='Input',
+            datatype='GPString',
+            parameterType='Required',
+        )
+        params = [raster_layer, lower_gray_level, upper_gray_level, output_tiff]
+        return params
+
+    def isLicensed(self):
+        """Set whether tool is licensed to execute."""
+        return True
+
+    def updateParameters(self, parameters):
+        """Modify the values and properties of parameters before internal
+        validation is performed.  This method is called whenever a parameter
+        has been changed."""
+        return
+
+    def updateMessages(self, parameters):
+        """Modify the messages created by internal validation for each tool
+        parameter.  This method is called after internal validation."""
+        return
+
+    def execute(self, parameters, messages):
+        """The source code of the tool."""
+        raster_layer = parameters[0].valueAsText
+        lower_gray_level = parameters[1].value
+        upper_gray_level = parameters[2].value
+        output_tiff = parameters[3].value
+
+        img, img_a = get_raster_array(raster_layer)
+        gray_level_range = (lower_gray_level, upper_gray_level)
+        new_img_a = dippy.rescale_gray_levels(img_a, gray_level_range)
+        save_add_raster_array(output_tiff, new_img_a, img)
         return
 
 class GrayscaleTransform(object):
