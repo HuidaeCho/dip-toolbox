@@ -1687,7 +1687,7 @@ class WeightedAverage(object):
 class FirstDerivative(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "First derivative using the Sobel operators"
+        self.label = "First derivative using the Sobel filter"
         self.description = self.label
         self.canRunInBackground = False
 
