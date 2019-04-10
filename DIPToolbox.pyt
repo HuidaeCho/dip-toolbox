@@ -193,7 +193,7 @@ class ConvertMapToGrayscale(object):
 class RescaleGrayLevels(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Rescale gray levels (8 bits)"
+        self.label = "Rescale gray levels"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -201,7 +201,7 @@ class RescaleGrayLevels(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer [0, 255]',
+            displayName='Raster Layer',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -220,6 +220,13 @@ class RescaleGrayLevels(object):
             datatype='GPDouble',
             parameterType='Required',
         )
+        output_gray_levels = arcpy.Parameter(
+            name='output_gray_levels',
+            displayName='Output Gray Levels',
+            direction='Input',
+            datatype='GPDouble',
+            parameterType='Required',
+        )
         output_raster = arcpy.Parameter(
             name='output_raster',
             displayName='Output Raster',
@@ -227,7 +234,7 @@ class RescaleGrayLevels(object):
             datatype='DERasterDataset',
             parameterType='Required',
         )
-        params = [raster_layer, lower_gray_level, upper_gray_level, output_raster]
+        params = [raster_layer, lower_gray_level, upper_gray_level, output_gray_levels, output_raster]
         return params
 
     def isLicensed(self):
@@ -250,18 +257,19 @@ class RescaleGrayLevels(object):
         raster_layer = parameters[0].valueAsText
         lower_gray_level = parameters[1].value
         upper_gray_level = parameters[2].value
-        output_raster = parameters[3].valueAsText
+        output_gray_levels = parameters[3].value
+        output_raster = parameters[4].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
         gray_level_range = (lower_gray_level, upper_gray_level)
-        new_img_a = dippy.rescale_gray_levels(img_a, gray_level_range)
+        new_img_a = dippy.rescale_gray_levels(img_a, gray_level_range, output_gray_levels)
         save_raster_array(output_raster, new_img_a, img)
         return
 
 class GrayscaleTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Grayscale transform (8 bits)"
+        self.label = "Grayscale transform"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -269,7 +277,7 @@ class GrayscaleTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer [0, 255]',
+            displayName='Raster Layer',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -281,6 +289,13 @@ class GrayscaleTransform(object):
             datatype='GPLong',
             parameterType='Required',
         )
+        output_gray_levels = arcpy.Parameter(
+            name='output_gray_levels',
+            displayName='Output Gray Levels',
+            direction='Input',
+            datatype='GPLong',
+            parameterType='Required',
+        )
         output_raster = arcpy.Parameter(
             name='output_raster',
             displayName='Output Raster',
@@ -288,7 +303,7 @@ class GrayscaleTransform(object):
             datatype='DERasterDataset',
             parameterType='Required',
         )
-        params = [raster_layer, gray_levels, output_raster]
+        params = [raster_layer, gray_levels, output_gray_levels, output_raster]
         return params
 
     def isLicensed(self):
@@ -310,10 +325,11 @@ class GrayscaleTransform(object):
         """The source code of the tool."""
         raster_layer = parameters[0].valueAsText
         gray_levels = parameters[1].value
-        output_raster = parameters[2].valueAsText
+        output_gray_levels = parameters[2].value
+        output_raster = parameters[3].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.grayscale_transform(img_a, gray_levels)
+        new_img_a = dippy.grayscale_transform(img_a, gray_levels, output_gray_levels)
         save_raster_array(output_raster, new_img_a, img)
         return
 
