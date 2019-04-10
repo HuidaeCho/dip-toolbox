@@ -201,7 +201,7 @@ class RescaleGrayLevels(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -269,7 +269,7 @@ class GrayscaleTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -328,7 +328,7 @@ class NegativeTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -379,7 +379,7 @@ class LinearTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -462,7 +462,7 @@ class LogTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -513,7 +513,7 @@ class InverseLogTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -564,7 +564,7 @@ class PowerTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -765,7 +765,7 @@ class Histogram(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -807,7 +807,7 @@ class HistogramEqualize(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -1818,7 +1818,7 @@ class Sharpen(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer',
+            displayName='Raster Layer with 256 Gray Levels',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
