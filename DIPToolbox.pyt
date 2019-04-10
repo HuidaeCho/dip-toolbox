@@ -2155,7 +2155,7 @@ class ConvertRGBToHSI(object):
         )
         H_raster = arcpy.Parameter(
             name='H_raster',
-            displayName='Output H Raster (degrees)',
+            displayName='Output H Raster [0, 360]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
@@ -2221,7 +2221,7 @@ class ConvertHSIToRGB(object):
         """Define parameter definitions"""
         H_layer = arcpy.Parameter(
             name='H_layer',
-            displayName='H Layer (degrees)',
+            displayName='H Layer [0, 360]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
