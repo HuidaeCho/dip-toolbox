@@ -193,7 +193,7 @@ class ConvertMapToGrayscale(object):
 class RescaleGrayLevels(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Rescale gray levels (8-bit input)"
+        self.label = "Rescale gray levels (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -201,7 +201,7 @@ class RescaleGrayLevels(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -261,7 +261,7 @@ class RescaleGrayLevels(object):
 class GrayscaleTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Grayscale transform (8-bit input)"
+        self.label = "Grayscale transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -269,7 +269,7 @@ class GrayscaleTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -320,7 +320,7 @@ class GrayscaleTransform(object):
 class NegativeTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Negative transform (8-bit input)"
+        self.label = "Negative transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -328,7 +328,7 @@ class NegativeTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -371,7 +371,7 @@ class NegativeTransform(object):
 class LinearTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Linear transform (8-bit input)"
+        self.label = "Linear transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -379,7 +379,7 @@ class LinearTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -454,7 +454,7 @@ class LinearTransform(object):
 class LogTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Log transform (8-bit input)"
+        self.label = "Log transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -462,7 +462,7 @@ class LogTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -505,7 +505,7 @@ class LogTransform(object):
 class InverseLogTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Inverse-log transform (8-bit input)"
+        self.label = "Inverse-log transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -513,7 +513,7 @@ class InverseLogTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -556,7 +556,7 @@ class InverseLogTransform(object):
 class PowerTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Power transform (8-bit input)"
+        self.label = "Power transform (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -564,7 +564,7 @@ class PowerTransform(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -757,7 +757,7 @@ class BitPlaneSlice(object):
 class Histogram(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Histogram (8-bit input)"
+        self.label = "Histogram (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -765,7 +765,7 @@ class Histogram(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -799,7 +799,7 @@ class Histogram(object):
 class HistogramEqualize(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Histogram equalize (8-bit input)"
+        self.label = "Histogram equalize (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -807,7 +807,7 @@ class HistogramEqualize(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -1810,7 +1810,7 @@ class SecondDerivative(object):
 class Sharpen(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Sharpen using the Laplacian (8-bit input)"
+        self.label = "Sharpen using the Laplacian (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -1818,7 +1818,7 @@ class Sharpen(object):
         """Define parameter definitions"""
         raster_layer = arcpy.Parameter(
             name='raster_layer',
-            displayName='Raster Layer with 256 Gray Levels',
+            displayName='Raster Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
@@ -1936,7 +1936,7 @@ class HighBoostFilter(object):
 class ConvertRGBToCMY(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Convert RGB to CMY"
+        self.label = "Convert RGB to CMY (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -1944,42 +1944,42 @@ class ConvertRGBToCMY(object):
         """Define parameter definitions"""
         R_layer = arcpy.Parameter(
             name='R_layer',
-            displayName='R Layer',
+            displayName='R Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         G_layer = arcpy.Parameter(
             name='G_layer',
-            displayName='G Layer',
+            displayName='G Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         B_layer = arcpy.Parameter(
             name='B_layer',
-            displayName='B Layer',
+            displayName='B Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         C_raster = arcpy.Parameter(
             name='C_raster',
-            displayName='Output C Raster',
+            displayName='Output C Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         M_raster = arcpy.Parameter(
             name='M_raster',
-            displayName='Output M Raster',
+            displayName='Output M Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         Y_raster = arcpy.Parameter(
             name='Y_raster',
-            displayName='Output Y Raster',
+            displayName='Output Y Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
@@ -2023,7 +2023,7 @@ class ConvertRGBToCMY(object):
 class ConvertCMYToRGB(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Convert CMY to RGB"
+        self.label = "Convert CMY to RGB (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -2031,42 +2031,42 @@ class ConvertCMYToRGB(object):
         """Define parameter definitions"""
         C_layer = arcpy.Parameter(
             name='C_layer',
-            displayName='C Layer',
+            displayName='C Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         M_layer = arcpy.Parameter(
             name='M_layer',
-            displayName='M Layer',
+            displayName='M Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         Y_layer = arcpy.Parameter(
             name='Y_layer',
-            displayName='Y Layer',
+            displayName='Y Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         R_raster = arcpy.Parameter(
             name='R_raster',
-            displayName='Output R Raster',
+            displayName='Output R Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         G_raster = arcpy.Parameter(
             name='G_raster',
-            displayName='Output G Raster',
+            displayName='Output G Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         B_raster = arcpy.Parameter(
             name='B_raster',
-            displayName='Output B Raster',
+            displayName='Output B Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
@@ -2110,7 +2110,7 @@ class ConvertCMYToRGB(object):
 class ConvertRGBToHSI(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Convert RGB to HSI"
+        self.label = "Convert RGB to HSI (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -2118,42 +2118,42 @@ class ConvertRGBToHSI(object):
         """Define parameter definitions"""
         R_layer = arcpy.Parameter(
             name='R_layer',
-            displayName='R Layer',
+            displayName='R Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         G_layer = arcpy.Parameter(
             name='G_layer',
-            displayName='G Layer',
+            displayName='G Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         B_layer = arcpy.Parameter(
             name='B_layer',
-            displayName='B Layer',
+            displayName='B Layer [0, 255]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         H_raster = arcpy.Parameter(
             name='H_raster',
-            displayName='Output H Raster',
+            displayName='Output H Raster (degrees)',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         S_raster = arcpy.Parameter(
             name='S_raster',
-            displayName='Output S Raster',
+            displayName='Output S Raster [0, 1]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         I_raster = arcpy.Parameter(
             name='I_raster',
-            displayName='Output I Raster',
+            displayName='Output I Raster [0, 1]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
@@ -2197,7 +2197,7 @@ class ConvertRGBToHSI(object):
 class ConvertHSIToRGB(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Convert HSI to RGB"
+        self.label = "Convert HSI to RGB (8 bits)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -2205,42 +2205,42 @@ class ConvertHSIToRGB(object):
         """Define parameter definitions"""
         H_layer = arcpy.Parameter(
             name='H_layer',
-            displayName='H Layer',
+            displayName='H Layer (degrees)',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         S_layer = arcpy.Parameter(
             name='S_layer',
-            displayName='S Layer',
+            displayName='S Layer [0, 1]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         I_layer = arcpy.Parameter(
             name='I_layer',
-            displayName='I Layer',
+            displayName='I Layer [0, 1]',
             direction='Input',
             datatype='GPRasterLayer',
             parameterType='Required',
         )
         R_raster = arcpy.Parameter(
             name='R_raster',
-            displayName='Output R Raster',
+            displayName='Output R Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         G_raster = arcpy.Parameter(
             name='G_raster',
-            displayName='Output G Raster',
+            displayName='Output G Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
         )
         B_raster = arcpy.Parameter(
             name='B_raster',
-            displayName='Output B Raster',
+            displayName='Output B Raster [0, 255]',
             direction='Output',
             datatype='DERasterDataset',
             parameterType='Required',
