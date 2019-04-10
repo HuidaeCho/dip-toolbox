@@ -193,7 +193,7 @@ class ConvertMapToGrayscale(object):
 class RescaleGrayLevels(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Rescale gray levels"
+        self.label = "Rescale gray levels (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -261,7 +261,7 @@ class RescaleGrayLevels(object):
 class GrayscaleTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Grayscale transform"
+        self.label = "Grayscale transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -320,7 +320,7 @@ class GrayscaleTransform(object):
 class NegativeTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Negative transform"
+        self.label = "Negative transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -371,7 +371,7 @@ class NegativeTransform(object):
 class LinearTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Linear transform"
+        self.label = "Linear transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -454,7 +454,7 @@ class LinearTransform(object):
 class LogTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Log transform"
+        self.label = "Log transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -505,7 +505,7 @@ class LogTransform(object):
 class InverseLogTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Inverse-log transform"
+        self.label = "Inverse-log transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -556,7 +556,7 @@ class InverseLogTransform(object):
 class PowerTransform(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Power transform"
+        self.label = "Power transform (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -757,7 +757,7 @@ class BitPlaneSlice(object):
 class Histogram(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Histogram"
+        self.label = "Histogram (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -799,7 +799,7 @@ class Histogram(object):
 class HistogramEqualize(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Histogram equalize"
+        self.label = "Histogram equalize (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -955,7 +955,7 @@ class BitwiseAnd(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_and(img1_a, img2_a)
-        save_raster_array(output_raster, new_img_a, img1)
+        save_add_raster_array(output_raster, new_img_a, img1)
         return
 
 class BitwiseOr(object):
@@ -1015,7 +1015,7 @@ class BitwiseOr(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_or(img1_a, img2_a)
-        save_raster_array(output_raster, new_img_a, img1)
+        save_add_raster_array(output_raster, new_img_a, img1)
         return
 
 class BitwiseXor(object):
@@ -1075,7 +1075,7 @@ class BitwiseXor(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.bitwise_xor(img1_a, img2_a)
-        save_raster_array(output_raster, new_img_a, img1)
+        save_add_raster_array(output_raster, new_img_a, img1)
         return
 
 class Add(object):
@@ -1130,7 +1130,7 @@ class Add(object):
             img, img_a = get_raster_array(raster_layer)
             imgs_a.append(img_a)
         new_img_a = dippy.add(imgs_a)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class Subtract(object):
@@ -1190,7 +1190,7 @@ class Subtract(object):
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
         new_img_a = dippy.subtract(img1_a, img2_a)
-        save_raster_array(output_raster, new_img_a, img1)
+        save_add_raster_array(output_raster, new_img_a, img1)
         return
 
 class AddNoise(object):
@@ -1257,7 +1257,7 @@ class AddNoise(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.add_noise(img_a, prob, max)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class Average(object):
@@ -1312,7 +1312,7 @@ class Average(object):
             img, img_a = get_raster_array(raster_layer)
             imgs_a.append(img_a)
         new_img_a = dippy.average(imgs_a)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class LocalStatistics(object):
@@ -1534,7 +1534,7 @@ class LocalEnhance(object):
         local_mean_a = get_raster_array(local_mean_layer)[1]
         local_std_a = get_raster_array(local_std_layer)[1]
         new_img_a = dippy.local_enhance(img_a, local_mean_a, local_std_a, multi, (k0, k1, k2))
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class Convolute(object):
@@ -1618,7 +1618,7 @@ class Convolute(object):
         img, img_a = get_raster_array(raster_layer)
         mask = np.fromstring(mask, sep=' ').reshape(height, width)
         new_img_a = dippy.convolute(img_a, mask, average)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class WeightedAverage(object):
@@ -1694,7 +1694,7 @@ class WeightedAverage(object):
         img, img_a = get_raster_array(raster_layer)
         weights = np.fromstring(weights, sep=' ').reshape(height, width)
         new_img_a = dippy.weighted_average(img_a, weights)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class FirstDerivative(object):
@@ -1745,7 +1745,7 @@ class FirstDerivative(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.first_derivative(img_a)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class SecondDerivative(object):
@@ -1804,13 +1804,13 @@ class SecondDerivative(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.second_derivative(img_a, diag)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class Sharpen(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Sharpen using the Laplacian"
+        self.label = "Sharpen using the Laplacian (8-bit input)"
         self.description = self.label
         self.canRunInBackground = False
 
@@ -1863,7 +1863,7 @@ class Sharpen(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.sharpen(img_a, diag)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class HighBoostFilter(object):
@@ -1930,7 +1930,7 @@ class HighBoostFilter(object):
 
         img, img_a = get_raster_array(raster_layer)
         new_img_a = dippy.high_boost_filter(img_a, A, diag)
-        save_raster_array(output_raster, new_img_a, img)
+        save_add_raster_array(output_raster, new_img_a, img)
         return
 
 class ConvertRGBToCMY(object):
