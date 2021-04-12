@@ -1,6 +1,6 @@
 # Digital Image Processing Toolbox for ArcGIS Pro
 
-This ArcGIS Pro Python toolbox provides digital image processing tools. It requires DIPPy and AgPy.
+This ArcGIS Pro Python toolbox provides digital image processing tools. It requires [Digip](https://github.com/HuidaeCho/digip) and [AgPy](https://github.com/HuidaeCho/agpy).
 
 ## License
 
