@@ -29,8 +29,8 @@ import numpy as np
 # https://github.com/HuidaeCho/agpy
 import agpy
 
-# https://github.com/HuidaeCho/dippy
-import dippy
+# https://github.com/HuidaeCho/digip
+import digip
 
 class Toolbox(object):
     def __init__(self):
@@ -262,7 +262,7 @@ class RescaleGrayLevels(object):
 
         img, img_a = get_raster_array(raster_layer)
         gray_level_range = (lower_gray_level, upper_gray_level)
-        new_img_a = dippy.rescale_gray_levels(img_a, gray_level_range, output_gray_levels)
+        new_img_a = digip.rescale_gray_levels(img_a, gray_level_range, output_gray_levels)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -329,7 +329,7 @@ class GrayscaleTransform(object):
         output_raster = parameters[3].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.grayscale_transform(img_a, gray_levels, output_gray_levels)
+        new_img_a = digip.grayscale_transform(img_a, gray_levels, output_gray_levels)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -380,7 +380,7 @@ class NegativeTransform(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.negative_transform(img_a)
+        new_img_a = digip.negative_transform(img_a)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -463,7 +463,7 @@ class LinearTransform(object):
         output_raster = parameters[5].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.linear_transform(img_a, (cp1r, cp1s), (cp2r, cp2s))
+        new_img_a = digip.linear_transform(img_a, (cp1r, cp1s), (cp2r, cp2s))
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -514,7 +514,7 @@ class LogTransform(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.log_transform(img_a)
+        new_img_a = digip.log_transform(img_a)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -565,7 +565,7 @@ class InverseLogTransform(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.inverse_log_transform(img_a)
+        new_img_a = digip.inverse_log_transform(img_a)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -624,7 +624,7 @@ class PowerTransform(object):
         output_raster = parameters[2].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.power_transform(img_a, gamma)
+        new_img_a = digip.power_transform(img_a, gamma)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -707,7 +707,7 @@ class GrayLevelSlice(object):
         output_raster = parameters[5].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.gray_level_slice(img_a, (lower_gray, upper_gray), new_gray, binary)
+        new_img_a = digip.gray_level_slice(img_a, (lower_gray, upper_gray), new_gray, binary)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -766,7 +766,7 @@ class BitPlaneSlice(object):
         output_raster = parameters[2].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.bit_plane_slice(img_a, bit_plane)
+        new_img_a = digip.bit_plane_slice(img_a, bit_plane)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -809,7 +809,7 @@ class Histogram(object):
         raster_layer = parameters[0].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        dippy.histogram(img_a)
+        digip.histogram(img_a)
         return
 
 class HistogramEqualize(object):
@@ -859,7 +859,7 @@ class HistogramEqualize(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.histogram_equalize(img_a)
+        new_img_a = digip.histogram_equalize(img_a)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -910,7 +910,7 @@ class BitwiseNot(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.bitwise_not(img_a)
+        new_img_a = digip.bitwise_not(img_a)
         save_raster_array(output_raster, new_img_a, img)
         return
 
@@ -970,7 +970,7 @@ class BitwiseAnd(object):
 
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
-        new_img_a = dippy.bitwise_and(img1_a, img2_a)
+        new_img_a = digip.bitwise_and(img1_a, img2_a)
         save_add_raster_array(output_raster, new_img_a, img1)
         return
 
@@ -1030,7 +1030,7 @@ class BitwiseOr(object):
 
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
-        new_img_a = dippy.bitwise_or(img1_a, img2_a)
+        new_img_a = digip.bitwise_or(img1_a, img2_a)
         save_add_raster_array(output_raster, new_img_a, img1)
         return
 
@@ -1090,7 +1090,7 @@ class BitwiseXor(object):
 
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
-        new_img_a = dippy.bitwise_xor(img1_a, img2_a)
+        new_img_a = digip.bitwise_xor(img1_a, img2_a)
         save_add_raster_array(output_raster, new_img_a, img1)
         return
 
@@ -1145,7 +1145,7 @@ class Add(object):
         for raster_layer in raster_layers.split(';'):
             img, img_a = get_raster_array(raster_layer)
             imgs_a.append(img_a)
-        new_img_a = dippy.add(imgs_a)
+        new_img_a = digip.add(imgs_a)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1205,7 +1205,7 @@ class Subtract(object):
 
         img1, img1_a = get_raster_array(raster_layer_1)
         img2, img2_a = get_raster_array(raster_layer_2)
-        new_img_a = dippy.subtract(img1_a, img2_a)
+        new_img_a = digip.subtract(img1_a, img2_a)
         save_add_raster_array(output_raster, new_img_a, img1)
         return
 
@@ -1272,7 +1272,7 @@ class AddNoise(object):
         output_raster = parameters[3].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.add_noise(img_a, prob, max)
+        new_img_a = digip.add_noise(img_a, prob, max)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1327,7 +1327,7 @@ class Average(object):
         for raster_layer in raster_layers.split(';'):
             img, img_a = get_raster_array(raster_layer)
             imgs_a.append(img_a)
-        new_img_a = dippy.average(imgs_a)
+        new_img_a = digip.average(imgs_a)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1439,7 +1439,7 @@ class LocalStatistics(object):
 
         if stats:
             img, img_a = get_raster_array(raster_layer)
-            local_a = dippy.local_statistics(img_a, (height, width), stats)
+            local_a = digip.local_statistics(img_a, (height, width), stats)
             if local_mean_raster:
                 save_raster_array(local_mean_raster, local_a[0], img)
             if local_std_raster:
@@ -1549,7 +1549,7 @@ class LocalEnhance(object):
         img, img_a = get_raster_array(raster_layer)
         local_mean_a = get_raster_array(local_mean_layer)[1]
         local_std_a = get_raster_array(local_std_layer)[1]
-        new_img_a = dippy.local_enhance(img_a, local_mean_a, local_std_a, multi, (k0, k1, k2))
+        new_img_a = digip.local_enhance(img_a, local_mean_a, local_std_a, multi, (k0, k1, k2))
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1633,7 +1633,7 @@ class Convolute(object):
 
         img, img_a = get_raster_array(raster_layer)
         mask = np.fromstring(mask, sep=' ').reshape(height, width)
-        new_img_a = dippy.convolute(img_a, mask, average)
+        new_img_a = digip.convolute(img_a, mask, average)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1709,7 +1709,7 @@ class WeightedAverage(object):
 
         img, img_a = get_raster_array(raster_layer)
         weights = np.fromstring(weights, sep=' ').reshape(height, width)
-        new_img_a = dippy.weighted_average(img_a, weights)
+        new_img_a = digip.weighted_average(img_a, weights)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1760,7 +1760,7 @@ class FirstDerivative(object):
         output_raster = parameters[1].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.first_derivative(img_a)
+        new_img_a = digip.first_derivative(img_a)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1819,7 +1819,7 @@ class SecondDerivative(object):
         output_raster = parameters[2].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.second_derivative(img_a, diag)
+        new_img_a = digip.second_derivative(img_a, diag)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1878,7 +1878,7 @@ class Sharpen(object):
         output_raster = parameters[2].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.sharpen(img_a, diag)
+        new_img_a = digip.sharpen(img_a, diag)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -1945,7 +1945,7 @@ class HighBoostFilter(object):
         output_raster = parameters[3].valueAsText
 
         img, img_a = get_raster_array(raster_layer)
-        new_img_a = dippy.high_boost_filter(img_a, A, diag)
+        new_img_a = digip.high_boost_filter(img_a, A, diag)
         save_add_raster_array(output_raster, new_img_a, img)
         return
 
@@ -2030,7 +2030,7 @@ class ConvertRGBToCMY(object):
         R, R_a = get_raster_array(R_layer)
         G, G_a = get_raster_array(G_layer)
         B, B_a = get_raster_array(B_layer)
-        C_a, M_a, Y_a = dippy.rgb_to_cmy(R_a, G_a, B_a)
+        C_a, M_a, Y_a = digip.rgb_to_cmy(R_a, G_a, B_a)
         save_raster_array(C_raster, C_a, R)
         save_raster_array(M_raster, M_a, G)
         save_raster_array(Y_raster, Y_a, B)
@@ -2117,7 +2117,7 @@ class ConvertCMYToRGB(object):
         C, C_a = get_raster_array(C_layer)
         M, M_a = get_raster_array(M_layer)
         Y, Y_a = get_raster_array(Y_layer)
-        R_a, G_a, B_a = dippy.cmy_to_rgb(C_a, M_a, Y_a)
+        R_a, G_a, B_a = digip.cmy_to_rgb(C_a, M_a, Y_a)
         save_raster_array(R_raster, R_a, C)
         save_raster_array(G_raster, G_a, M)
         save_raster_array(B_raster, B_a, Y)
@@ -2204,7 +2204,7 @@ class ConvertRGBToHSI(object):
         R, R_a = get_raster_array(R_layer)
         G, G_a = get_raster_array(G_layer)
         B, B_a = get_raster_array(B_layer)
-        H_a, S_a, I_a = dippy.rgb_to_hsi(R_a, G_a, B_a)
+        H_a, S_a, I_a = digip.rgb_to_hsi(R_a, G_a, B_a)
         save_raster_array(H_raster, H_a, R)
         save_raster_array(S_raster, S_a, G)
         save_raster_array(I_raster, I_a, B)
@@ -2291,7 +2291,7 @@ class ConvertHSIToRGB(object):
         H, H_a = get_raster_array(H_layer)
         S, S_a = get_raster_array(S_layer)
         I, I_a = get_raster_array(I_layer)
-        R_a, G_a, B_a = dippy.hsi_to_rgb(H_a, S_a, I_a)
+        R_a, G_a, B_a = digip.hsi_to_rgb(H_a, S_a, I_a)
         save_raster_array(R_raster, R_a, H)
         save_raster_array(G_raster, G_a, S)
         save_raster_array(B_raster, B_a, I)
